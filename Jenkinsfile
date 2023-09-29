@@ -15,13 +15,15 @@ pipeline {
                 script {
                     def serverUsername = 'student'
                     def serverAddress = '192.168.1.22'
-                    def serverDestination = '/var/www/html'
+                    def serverDestination = '/var/www/html/'
 
-                    if (isUnix()) {
-                        sh "rsync -avz -e ssh ./* ${serverUsername}@${serverAddress}:${serverDestination}/"
-                    } else {
-                        bat "robocopy .\\ \\\\${serverAddress}\\${serverDestination} /E"
-                    }
+                    // Vervang 'C:/path/to/your/private/key' door het pad naar je SSH-private sleutel
+                    def sshPrivateKeyPath = 'C:/path/to/your/private/key'
+
+                    // SCP-commando om bestanden te kopiëren
+                    bat """
+                        winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "put -r -i ${sshPrivateKeyPath} ./* ${serverDestination}" "exit"
+                    """
                 }
             }
         }
