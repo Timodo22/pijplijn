@@ -21,11 +21,11 @@ pipeline {
 
                     if (isUnix()) {
                         sh """
-                            winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i /path/to/your/private/key ./* ${serverDestination}/" "exit"
+                            echo y | winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i /path/to/your/private/key ./* ${serverDestination}/" "exit"
                         """
                     } else {
                         bat """
-                            winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i C:\\path\\to\\your\\private\\key .\\* ${serverDestination}\\" "exit"
+                            echo y | winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i C:\\path\\to\\your\\private\\key .\\* ${serverDestination}\\" "exit"
                         """
                     }
                 }
