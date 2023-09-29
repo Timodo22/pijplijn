@@ -16,16 +16,15 @@ pipeline {
                     def serverUsername = 'student'
                     def serverAddress = '192.168.1.22'
                     def serverDestination = '/var/www/html'
-
-                    def hostKeyFingerprint = 'ssh-ed25519 255 60k2X4blYxkcniIRj82ABN/MvBGaDaQyeecrj8FusXk'
+                    def serverPassword = 'student'
 
                     if (isUnix()) {
                         sh """
-                            echo y | winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i /path/to/your/private/key ./* ${serverDestination}/" "exit"
+                            sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
                         """
                     } else {
                         bat """
-                            echo y | winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i C:\\path\\to\\your\\private\\key .\\* ${serverDestination}\\" "exit"
+                            sshpass -p "${serverPassword}" robocopy .\\ \\\\${serverAddress}\\${serverDestination} /E
                         """
                     }
                 }
