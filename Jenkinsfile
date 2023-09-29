@@ -15,15 +15,19 @@ pipeline {
                 script {
                     def serverUsername = 'student'
                     def serverAddress = '192.168.1.22'
-                    def serverDestination = '/var/www/html/'
+                    def serverDestination = '/var/www/html'
 
-                    // Vervang 'C:/path/to/your/private/key' door het pad naar je SSH-private sleutel
-                    def sshPrivateKeyPath = 'C:/path/to/your/private/key'
+                    def hostKeyFingerprint = 'ssh-ed25519 255 60k2X4blYxkcniIRj82ABN/MvBGaDaQyeecrj8FusXk'
 
-                    // SCP-commando om bestanden te kopiëren
-                    bat """
-                        winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "put -r -i ${sshPrivateKeyPath} ./* ${serverDestination}" "exit"
-                    """
+                    if (isUnix()) {
+                        sh """
+                            winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i /path/to/your/private/key ./* ${serverDestination}/" "exit"
+                        """
+                    } else {
+                        bat """
+                            winscp.com /command "option batch abort" "option confirm off" "open scp://${serverUsername}@${serverAddress}" "option sshhostkey ${hostKeyFingerprint}" "put -r -i C:\\path\\to\\your\\private\\key .\\* ${serverDestination}\\" "exit"
+                        """
+                    }
                 }
             }
         }
