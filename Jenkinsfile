@@ -20,12 +20,12 @@ pipeline {
 
                     if (isUnix()) {
                         sh """
-                            sshpass -p ${password} rsync -avz --progress ./* ${serverUsername}@${serverAddress}:${serverDestination}/
+                            rsync -avz --progress ./* ${serverUsername}@${serverAddress}:${serverDestination}/
                         """
                     } else {
-                        // Op Windows kun je plink (onderdeel van PuTTY) en rsync gebruiken
+                        // Op Windows kun je PuTTY-plink en pscp gebruiken
                         bat """
-                            plink -ssh -l ${serverUsername} -pw ${password} -P 22 ${serverAddress} "rsync -avz --progress /cygdrive/c/path/to/your/source/* ${serverDestination}/"
+                            plink -ssh -l ${serverUsername} -pw ${password} -P 22 ${serverAddress} "pscp -r -pw ${password} C:\\path\\to\\your\\source\\* ${serverUsername}@${serverAddress}:${serverDestination}/"
                         """
                     }
                 }
