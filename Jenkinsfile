@@ -1,22 +1,31 @@
 pipeline {
     agent any
+
     stages {
         stage('Checkout') {
             steps {
-                // Stap 1: Ophalen van de broncode uit de Git-repository (in dit geval is er geen broncode)
-                // Leeg laten omdat we geen broncode ophalen
+                // Deze stap haalt de broncode op uit de Git-repository
+                checkout scm
             }
         }
-        stage('Copy HTML to Server') {
-            steps {
-                // Stap 2: Kopieer het index.html-bestand naar de Linux-server via SSH
-                script {
-                    def remoteServer = 'user@your-server-ip' // Vervang met je eigen gebruikersnaam en server-IP
-                    def remoteDirectory = '/path/to/remote/directory' // Vervang met het pad naar de doelmap op de server
 
-                    sh "scp index.html ${remoteServer}:${remoteDirectory}"
+        stage('Copy Files to Web Server') {
+            steps {
+                // Vervang de placeholders met jouw serverinformatie en bestemmingsmap
+                script {
+                    def serverUsername = 'student'
+                    def serverAddress = '192.168.1.22'
+                    def serverDestination = '/var/www/html'
+
+                    sh "rsync -avz -e ssh ./* ${serverUsername}@${serverAddress}:${serverDestination}/"
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Bestanden zijn succesvol gekopieerd naar de webserver.'
         }
     }
 }
