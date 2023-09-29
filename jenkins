@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                // Hier voeg je stappen toe om je code te bouwen (bijv. compileren, pakketten maken).
+            }
+        }
+        stage('Test') {
+            steps {
+                // Hier voeg je stappen toe om tests uit te voeren.
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Hier voeg je stappen toe om je code te implementeren in de test- of productieomgeving.
+            }
+        }
+    }
+}
