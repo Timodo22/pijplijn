@@ -17,7 +17,11 @@ pipeline {
                     def serverAddress = '192.168.1.22'
                     def serverDestination = '/var/www/html'
 
-                    sh "rsync -avz -e ssh ./* ${serverUsername}@${serverAddress}:${serverDestination}/"
+                    if (isUnix()) {
+                        sh "rsync -avz -e ssh ./* ${serverUsername}@${serverAddress}:${serverDestination}/"
+                    } else {
+                        bat "robocopy .\\ \\\\${serverAddress}\\${serverDestination} /E"
+                    }
                 }
             }
         }
