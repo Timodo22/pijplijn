@@ -20,7 +20,7 @@ pipeline {
 
                     if (isUnix()) {
                         sh """
-                            rsync -avz --progress --rsh="sshpass -p ${password} ssh -o StrictHostKeyChecking=no -l ${serverUsername}" ./* ${serverUsername}@${serverAddress}:${serverDestination}/
+                            sshpass -p ${password} rsync -avz --progress ./* ${serverUsername}@${serverAddress}:${serverDestination}/
                         """
                     } else {
                         // Op Windows kun je plink (onderdeel van PuTTY) en rsync gebruiken
