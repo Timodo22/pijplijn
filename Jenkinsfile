@@ -2,40 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Kopieer bestanden naar server') {
             steps {
-                // Deze stap haalt de broncode op uit de Git-repository
-                checkout scm
-            }
-        }
-
-        stage('Copy Files to Web Server') {
-            steps {
-                // Vervang de placeholders met jouw serverinformatie en bestemmingsmap
                 script {
-                    def serverUsername = 'student'
-                    def serverAddress = '192.168.1.22'
-                    def serverDestination = '/var/www/html'
-                    def password = 'student'
+                    // Gegevens van de webserver
+                    def serverHost = '192.168.1.22'
+                    def serverPort = 22 // Standaard SSH-poort
+                    def serverUser = 'student'
+                    def serverPassword = 'student'
 
-                    if (isUnix()) {
-                        sh """
-                            rsync -avz --progress ./* ${serverUsername}@${serverAddress}:${serverDestination}/
-                        """
-                    } else {
-                        // Op Windows kun je PuTTY-plink en pscp gebruiken
-                        bat """
-                            plink -ssh -l ${serverUsername} -pw ${password} -P 22 ${serverAddress} "pscp -r -pw ${password} C:\\path\\to\\your\\source\\* ${serverUsername}@${serverAddress}:${serverDestination}/"
-                        """
-                    }
+                    // Bestemming op de server
+                    def serverDir = '/var/www/html'
+
+                    // Pad naar de bestanden die je wilt kopiëren
+                    def localDir = './lokale_map_met_bestanden/*'
+
+                    // SSH-opdracht om bestanden te kopiëren naar de server
+                    sh """
+                        sshpass -p ${serverPassword} scp -P ${serverPort} -r ${localDir} ${serverUser}@${serverHost}:${serverDir}
+                    """
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Bestanden zijn succesvol gekopieerd naar de webserver.'
         }
     }
 }
