@@ -20,11 +20,13 @@ pipeline {
 
                     if (isUnix()) {
                         sh """
+                            # Gebruik Git Bash om SSH-opdrachten uit te voeren
                             sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
                         """
                     } else {
                         bat """
-                            sshpass -p "${serverPassword}" robocopy .\\ \\\\${serverAddress}\\${serverDestination} /E
+                            # Gebruik Git Bash om SSH-opdrachten uit te voeren
+                            sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
                         """
                     }
                 }
