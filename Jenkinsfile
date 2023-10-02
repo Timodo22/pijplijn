@@ -1,40 +1,28 @@
 pipeline {
-    agent any // Dit betekent dat de pipeline op elke beschikbare agent kan draaien
+    agent any
 
-    environment {
-        // Voeg hier eventuele omgevingsvariabelen toe
-        SSH_HOST = '192.168.1.18'
-        SSH_USER = 'student'
-        GIT_REPO = 'https://github.com/Timodo22/pijplijn.git'
-        GIT_BRANCH = 'test' // of de naam van de tak die je wilt gebruiken
-    }
-
-stage('Haal code op van GitHub') {
-    steps {
-        // Haal de code op van GitHub-repository zonder credentials
-        git branch: env.GIT_BRANCH, url: env.GIT_REPO
-    }
-    post {
-        always {
-            echo 'Stappen in de post-sectie'
+    stages {
+        stage('Checkout') {
+            steps {
+                // Haal de broncode op van je repository (bijvoorbeeld GitHub)
+                checkout scm
+            }
         }
-    }
-}
 
         stage('Kopieer naar webserver') {
             steps {
-                // Kopieer het index.html-bestand naar de externe webserver via SSH
                 script {
-                    sh """
-                        sshpass -p ${SSH_PASSWORD} rsync -avz ./Jenkinsfile ./index.html ./test.txt ./test2.txt ${SSH_USER}@${SSH_HOST}:/var/www/html/
-                    """
+                    // Vervang 'jouw-gebruikersnaam' door de gebruikersnaam van de webserver
+                    // Vervang 'jouw-server-ip' door het IP-adres van de webserver
+                    // Vervang '/var/www/html/' door het pad waar je index.html-bestand moet worden gekopieerd
+                    def serverUsername = 'student'
+                    def serverIP = '192.168.1.18'
+                    def remotePath = '/var/www/html/'
+
+                    // Kopieer het index.html-bestand naar de webserver met scp
+                    sh "scp index.html ${serverUsername}@${serverIP}:${remotePath}"
                 }
             }
         }
     }
-
-    post {
-        always {
-            // Voer optionele stappen uit na de hoofdstappen, indien nodig
-        }
-    }
+}
