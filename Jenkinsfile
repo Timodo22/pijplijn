@@ -1,63 +1,43 @@
 pipeline {
     agent any
-
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/NielsTjenkins/Jenkinsfile.git']]])
+                // Deze stap haalt de broncode op uit de Git-repository
+                checkout scm
             }
         }
-        stage('Deploy to Test Server') {
-            when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
-            }
+        stage('Copy Files to Web Server') {
             steps {
-                echo 'Deploying to Test Server'
-                pipeline {
-    agent any
+                // Vervang de placeholders met jouw serverinformatie en bestemmingsmap
+                script {
+                    def serverUsername = 'student'
+                    def serverAddress = '192.168.1.22'
+                    def serverDestination = '/var/www/html'
+                    def serverPassword = 'student'
+                    def password = 'student'
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/NielsTjenkins/Jenkinsfile.git']]])
-            }
-        }
-        stage('Deploy to Test Server') {
-            when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
-            }
-            steps {
-                echo 'Deploying to Test Server'
-                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\path\to\private-key.ppk" -r ./* username@10.0.0.26:/var/www/html/'
-
-            }
-        }
-        stage('Deploy to Production Server') {
-            when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
-            }
-            steps {
-                echo 'Deploying to Production Server'
-
-
-                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\path\to\private-key.ppk" -r ./* student@10.0.0.26:/var/www/html/'
+                    if (isUnix()) {
+                        sh """
+                            # Gebruik Git Bash om SSH-opdrachten uit te voeren
+                            sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
+                            rsync -avz --progress --rsh="sshpass -p ${password} ssh -o StrictHostKeyChecking=no -l ${serverUsername}" ./* ${serverUsername}@${serverAddress}:${serverDestination}/
+                        """
+                    } else {
+                        // Op Windows kun je plink (onderdeel van PuTTY) en rsync gebruiken
+                        bat """
+                            # Gebruik Git Bash om SSH-opdrachten uit te voeren
+                            sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
+                            plink -ssh -l ${serverUsername} -pw ${password} -P 22 ${serverAddress} "rsync -avz --progress /cygdrive/c/path/to/your/source/* ${serverDestination}/"
+                        """
+                    }
+                }
             }
         }
     }
-}
-'
-            }
-        }
-        stage('Deploy to Production Server') {
-            when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
-            }
-            steps {
-                echo 'Deploying to Production Server'
-
-
-                bat 'pscp -i path/to/private-key.ppk -r ./* student@192.168.29.67:/var/www/html/'
-            }
+    post {
+        success {
+            echo 'Bestanden zijn succesvol gekopieerd naar de webserver.'
         }
     }
 }
