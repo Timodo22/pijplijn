@@ -2,30 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Checkout from GitHub') {
             steps {
-                // Haal de broncode op van je repository (bijvoorbeeld GitHub)
-                checkout scm
+                // Check out your code from GitHub.
+                script {
+                    def scmVars = checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'main']], // You can change the branch as needed
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'CloneOption', noTags: false, reference: '', shallow: false],
+                            [$class: 'CleanBeforeCheckout'],
+                        ],
+                        userRemoteConfigs: [[url: 'https://github.com/Timodo22/pijplijn.git']] // Replace with your GitHub repo URL
+                    ])
+                }
             }
         }
 
-        stage('Kopieer naar webserver') {
+        stage('Overwrite HTML files on Server') {
             steps {
-                script {
-                    // Vervang 'jouw-gebruikersnaam' door de gebruikersnaam van de webserver
-                    // Vervang 'jouw-server-ip' door het IP-adres van de webserver
-                    // Vervang '/var/www/html/' door het pad waar je index.html-bestand moet worden gekopieerd
-
-                    def serverUsername = 'student'
-                    def serverIP = '192.168.1.18'
-                    def remotePath = '/var/www/html/'
-
-                    // Het pad naar de SSH-privésleutel op de Jenkins-server
-                    def sshKeyPath ='~/.ssh/id_rsa'
-
-                    // Kopieer het index.html-bestand naar de webserver met scp en gebruik SSH-sleutel voor authenticatie
-                    sh "scp -i ${sshKeyPath} index.html ${serverUsername}@${serverIP}:${remotePath}"
-                }
+                // Copy HTML files from the checked-out repository to the server, overwriting existing files.
+                sh 'sshpass -p student scp -r /var/lib/jenkins/workspace/pijplijn_test/*.html student@192.168.1.18:/var/www/html/'
             }
         }
     }
