@@ -19,8 +19,8 @@ pipeline {
                     def serverIP = '192.168.1.18'
                     def remotePath = '/var/www/html/'
 
-                    // Kopieer het index.html-bestand naar de webserver met scp
-                    sh "scp index.html ${serverUsername}@${serverIP}:${remotePath}"
+                    // Kopieer het index.html-bestand naar de webserver met scp en schakel hostverificatie uit
+                    sh "scp -o StrictHostKeyChecking=no index.html ${serverUsername}@${serverIP}:${remotePath}"
                 }
             }
         }
