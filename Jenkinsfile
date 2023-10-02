@@ -15,12 +15,16 @@ pipeline {
                     // Vervang 'jouw-gebruikersnaam' door de gebruikersnaam van de webserver
                     // Vervang 'jouw-server-ip' door het IP-adres van de webserver
                     // Vervang '/var/www/html/' door het pad waar je index.html-bestand moet worden gekopieerd
+
                     def serverUsername = 'student'
-                    def serverIP = '192.168.1.18'
+                    def serverIP = '129.168.1.18'
                     def remotePath = '/var/www/html/'
 
-                    // Kopieer het index.html-bestand naar de webserver met scp en schakel hostverificatie uit
-                    sh " index.html ${serverUsername}@${serverIP}:${remotePath}"
+                    // Het pad naar de SSH-privésleutel op de Jenkins-server
+                    def sshKeyPath = '~/.ssh/id_rsa'
+
+                    // Kopieer het index.html-bestand naar de webserver met scp en gebruik SSH-sleutel voor authenticatie
+                    sh "scp -i ${sshKeyPath} index.html ${serverUsername}@${serverIP}:${remotePath}"
                 }
             }
         }
