@@ -17,7 +17,7 @@ pipeline {
                     // Vervang '/var/www/html/' door het pad waar je index.html-bestand moet worden gekopieerd
 
                     def serverUsername = 'student'
-                    def serverIP = '129.168.1.18'
+                    def serverIP = '192.168.1.18'
                     def remotePath = '/var/www/html/'
 
                     // Het pad naar de SSH-privésleutel op de Jenkins-server
