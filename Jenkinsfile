@@ -21,7 +21,7 @@ pipeline {
                     def remotePath = '/var/www/html/'
 
                     // Het pad naar de SSH-privésleutel op de Jenkins-server
-                    def sshKeyPath = '~/.ssh/id_rsa'
+                    def sshKeyPath ='secret.key'          //'~/.ssh/id_rsa'
 
                     // Kopieer het index.html-bestand naar de webserver met scp en gebruik SSH-sleutel voor authenticatie
                     sh "scp -i ${sshKeyPath} index.html ${serverUsername}@${serverIP}:${remotePath}"
