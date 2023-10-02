@@ -1,43 +1,37 @@
 pipeline {
-    agent any
+    agent any // Dit betekent dat de pipeline op elke beschikbare agent kan draaien
+
+    environment {
+        // Voeg hier eventuele omgevingsvariabelen toe
+        SSH_HOST = '192.168.1.18'
+        SSH_USER = 'student'
+        GIT_REPO = 'https://github.com/Timodo22/pijplijn.git'
+        GIT_BRANCH = 'test' // of de naam van de tak die je wilt gebruiken
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Haal code op van GitHub') {
             steps {
-                // Deze stap haalt de broncode op uit de Git-repository
-                checkout scm
+                // Haal de code op van GitHub-repository zonder credentials
+                git branch: env.GIT_BRANCH, url: env.GIT_REPO
             }
         }
-        stage('Copy Files to Web Server') {
-            steps {
-                // Vervang de placeholders met jouw serverinformatie en bestemmingsmap
-                script {
-                    def serverUsername = 'student'
-                    def serverAddress = '192.168.1.22'
-                    def serverDestination = '/var/www/html'
-                    def serverPassword = 'student'
-                    def password = 'student'
 
-                    if (isUnix()) {
-                        sh """
-                            # Gebruik Git Bash om SSH-opdrachten uit te voeren
-                            sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
-                            rsync -avz --progress --rsh="sshpass -p ${password} ssh -o StrictHostKeyChecking=no -l ${serverUsername}" ./* ${serverUsername}@${serverAddress}:${serverDestination}/
-                        """
-                    } else {
-                        // Op Windows kun je plink (onderdeel van PuTTY) en rsync gebruiken
-                        bat """
-                            # Gebruik Git Bash om SSH-opdrachten uit te voeren
-                            sshpass -p "${serverPassword}" rsync -avz ./* ${serverUsername}@${serverAddress}:${serverDestination}/
-                            plink -ssh -l ${serverUsername} -pw ${password} -P 22 ${serverAddress} "rsync -avz --progress /cygdrive/c/path/to/your/source/* ${serverDestination}/"
-                        """
-                    }
+        stage('Kopieer naar webserver') {
+            steps {
+                // Kopieer het index.html-bestand naar de externe webserver via SSH
+                script {
+                    sh """
+                        sshpass -p ${SSH_PASSWORD} rsync -avz ./Jenkinsfile ./index.html ./test.txt ./test2.txt ${SSH_USER}@${SSH_HOST}:/var/www/html/
+                    """
                 }
             }
         }
     }
+
     post {
-        success {
-            echo 'Bestanden zijn succesvol gekopieerd naar de webserver.'
+        always {
+            // Voer optionele stappen uit na de hoofdstappen, indien nodig
         }
     }
 }
