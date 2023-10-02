@@ -20,34 +20,24 @@ pipeline {
             }
         }
 
-        stage('Deploy to Test Server') {
+        stage('Deploy to Dev Server') {
             steps {
                 // Copy HTML files from the "test" branch to the test server.
                 sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Multipipeline_test/index.html student@192.168.1.18:/var/www/html/'
             }
         }
 
-        stage('Confirmation') {
+        stage('Confirmation Dev') {
             steps {
                 // Prompt for confirmation before proceeding.
-                input(id: 'confirmDeployment', message: 'Review the test environment. If everything looks good, approve for deployment.', ok: 'Deploy')
+                input(id: 'confirmDeployment', message: 'Review the test environment. If everything looks good, approve for Development.', ok: 'Deploy')
             }
         }
 
-        stage('Push to Main Branch') {
-            steps {
-                // Switch to the "main" branch and copy the index.html from the "test" branch.
-                sh 'git checkout main'
-                sh 'git checkout test -- /var/lib/jenkins/workspace/Multipipeline_test/index.html'
-                sh 'git commit -m "Copy index.html from test to main"'
-                sh 'git push origin main'
-            }
-        }
 
-        stage('Deploy to Main Server') {
+        stage('Deploy to test Server') {
             steps {
-                // Copy HTML files from the "main" branch to the main server.
-                sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Multipipeline_test/index.html student@192.168.1.18:/var/www/html/'
+                sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Multipipeline_test/index.html student@192.168.1.23:/var/www/html/'
             }
         }
     }
