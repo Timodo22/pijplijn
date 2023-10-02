@@ -9,13 +9,17 @@ pipeline {
         GIT_BRANCH = 'test' // of de naam van de tak die je wilt gebruiken
     }
 
-    stages {
-        stage('Haal code op van GitHub') {
-            steps {
-                // Haal de code op van GitHub-repository zonder credentials
-                git branch: env.GIT_BRANCH, url: env.GIT_REPO
-            }
+stage('Haal code op van GitHub') {
+    steps {
+        // Haal de code op van GitHub-repository zonder credentials
+        git branch: env.GIT_BRANCH, url: env.GIT_REPO
+    }
+    post {
+        always {
+            echo 'Stappen in de post-sectie'
         }
+    }
+}
 
         stage('Kopieer naar webserver') {
             steps {
