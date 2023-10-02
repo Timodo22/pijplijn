@@ -38,4 +38,3 @@ stage('Haal code op van GitHub') {
             // Voer optionele stappen uit na de hoofdstappen, indien nodig
         }
     }
-}
