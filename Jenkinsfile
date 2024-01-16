@@ -23,7 +23,7 @@ pipeline {
         stage('Deploy to Dev Server') {
             steps {
                 // Copy HTML files from the "test" branch to the test server.
-                sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Multipipeline_test/index.html student@192.168.0.37:/var/www/html/'
+                sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html student@192.168.0.37:/var/www/html/'
             }
         }
 
