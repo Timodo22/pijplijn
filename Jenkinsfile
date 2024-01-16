@@ -50,7 +50,7 @@ pipeline {
 
         stage('Deploy to main Server') {
             steps {
-                sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Multipipeline_test/index.html student@192.168.1.25:/var/www/html/'
+                sh 'sshpass -p student scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html student@192.168.0.41:/var/www/html/'
             }
         }
     }
