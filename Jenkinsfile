@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DEPLOY_USER = credentials('99')
-    }
-
     stages {
         stage('Checkout from GitHub (Test)') {
             steps {
@@ -25,7 +21,11 @@ pipeline {
 
         stage('Deploy to Dev Server') {
             steps {
-                sh "sshpass -p ${env.DEPLOY_USER} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.37:/var/www/html/"
+                script {
+                    withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
+                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.37:/var/www/html/"
+                    }
+                }
             }
         }
 
@@ -37,7 +37,11 @@ pipeline {
 
         stage('Deploy to test') {
             steps {
-                sh "sshpass -p ${env.DEPLOY_USER} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.39:/var/www/html/"
+                script {
+                    withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
+                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.39:/var/www/html/"
+                    }
+                }
             }
         }
 
@@ -49,7 +53,11 @@ pipeline {
 
         stage('Deploy to main Server') {
             steps {
-                sh "sshpass -p ${env.DEPLOY_USER} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.41:/var/www/html/"
+                script {
+                    withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
+                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.41:/var/www/html/"
+                    }
+                }
             }
         }
     }
