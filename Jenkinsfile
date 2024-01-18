@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        pollSCM('/1 * * *') // Controleer elke minuut op wijzigingen
+    }
+
     stages {
         stage('Checkout from GitHub (Test)') {
             steps {
