@@ -45,11 +45,11 @@ pipeline {
            // }
        // }
 
-        stage('Confirmation test server') {
-            steps {
-                input(id: 'confirmDeployment', message: 'Review the test environment. If everything looks good, approve for Development.', ok: 'Deploy')
-            }
-        }
+//        stage('Confirmation test server') {
+  //          steps {
+    //            input(id: 'confirmDeployment', message: 'Review the test environment. If everything looks good, approve for Development.', ok: 'Deploy')
+      //      }
+       // }
 
         stage('Deploy to main Server') {
             steps {
