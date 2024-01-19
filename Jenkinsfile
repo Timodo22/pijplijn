@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
-                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHO_test/index.html ${env.DEPLOY_USER}@192.168.0.37:/var/www/html/"
+                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHO/index.html ${env.DEPLOY_USER}@192.168.0.37:/var/www/html/"
                     }
                 }
             }
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
-                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHO_test/index.html ${env.DEPLOY_USER}@192.168.0.39:/var/www/html/"
+                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHO/index.html ${env.DEPLOY_USER}@192.168.0.39:/var/www/html/"
                     }
                 }
             }
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
-                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHOpipeline_test/index.html ${env.DEPLOY_USER}@192.168.0.41:/var/www/html/"
+                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHO/index.html ${env.DEPLOY_USER}@192.168.0.41:/var/www/html/"
                     }
                 }
             }
