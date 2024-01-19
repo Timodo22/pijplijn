@@ -19,22 +19,6 @@ pipeline {
             }
         }
 
-        stage('Deploy to Dev Server') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: '99', usernameVariable: 'DEPLOY_USER', passwordVariable: 'DEPLOY_USER_PSW')]) {
-                        sh "sshpass -p ${env.DEPLOY_USER_PSW} scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/SOHO/index.html ${env.DEPLOY_USER}@192.168.0.37:/var/www/html/"
-                    }
-                }
-            }
-        }
-
-        stage('Confirmation Dev') {
-            steps {
-                input(id: 'confirmDeployment', message: 'Review the test environment. If everything looks good, approve for Development.', ok: 'Deploy')
-            }
-        }
-
         stage('Deploy to test') {
             steps {
                 script {
